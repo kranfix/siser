@@ -51,9 +51,8 @@ void loop() {
       
     }
   }*/
-  sCDt.s = s;
   Serial.write((byte*)&sCDt,sCDtLen);
-  delay(1500);
+  delay(2000);
 }
 
 void BH1750_Init(int address) {
@@ -96,7 +95,7 @@ void readLightweightSensors() {
 
   // Lectura de lumenes
   if (BH1750_Read(BH1750_address) == 2) {
-    sCDts.lx = ((buff[0] << 8) | buff[1]) / 1.2;
+    sCDt.s.lx = ((buff[0] << 8) | buff[1]) / 1.2;
   }
 }
 

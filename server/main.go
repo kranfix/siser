@@ -38,10 +38,12 @@ func main(){
   // Dataframe Lecture
   initialDataframe := []byte("OPEN")
   onebyte := make([]byte, 1)
-  for { // loop
+
+  // Counts the number of blocks to read
+  Limit := 4
+  for count := 0; count < Limit; count++ { // loop
     // Initial dataframe detection
-    i := 0
-    for i < 4 {
+    for i := 0; i < 4;  {
       _, err := s.Read(onebyte)
       if err != nil {
         continue
@@ -52,6 +54,7 @@ func main(){
         i = 0
       }
     }
+
     fmt.Print(":")
     // Dataframe
     n := binary.Size(sDt)
@@ -60,7 +63,7 @@ func main(){
     buf := bytes.NewBuffer(B[:])
     //fmt.Printf("% x",B[:n])
     err = binary.Read(buf, binary.LittleEndian, &sDt)
-    fmt.Println(sDt)
+    fmt.Print(sDt)
     if err == nil {
       strbuf := bytes.NewBufferString(sDt.String())
       _, err := http.Post("http://localhost:1880/mongo",
@@ -68,6 +71,8 @@ func main(){
       if err != nil {
         fmt.Println("Problem with local server")
         fmt.Println(err)
+      } else {
+        fmt.Println(" ... Mongo ok!")
       }
     }
 
@@ -77,6 +82,12 @@ func main(){
         fmt.Printf("%s",onebyte)
       }
     }
+
+    if count == Limit-1 {
+      count = 0
+      time.Sleep(4 * time.Second)
+    }
+
   }
   fmt.Println("Unexpected infite loop exit.")
 }
