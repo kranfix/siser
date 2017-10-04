@@ -5,7 +5,7 @@ import (
   "time"
   "bytes"
   "encoding/binary"
-  "github.com/kranfix/siser/siser"
+  "../siser"
   "github.com/tarm/serial"
 )
 
