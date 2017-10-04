@@ -8,6 +8,7 @@ TinyGPS gps;
 DHT dht(DHTPIN, DHTTYPE);
 
 siserCompleteDataframe_t sCDt = {"OPEN",siser_t{},"CHAU"};
+//siserCompleteDataframe_t sCDt = {"OPEN",siser_t{}};
 byte sCDtLen = sizeof(sCDt);
 
 int Nivel_lluvia;
@@ -23,12 +24,12 @@ SiserStatus sStatus = SISER_SiserReadyToTx;
 void setup() {
   Wire.begin();
   BH1750_Init(BH1750_address);
-  Serial.begin(9600);
   pinMode(mq2Pin, INPUT);
   pinMode(rainPin, INPUT);
   pinMode(triger, OUTPUT);
   pinMode(echo, INPUT);
   dht.begin();
+  Serial.begin(9600);
   Serial1.begin(9600);
 }
 
@@ -51,7 +52,10 @@ void loop() {
       
     }
   }*/
-  Serial.write((byte*)&sCDt,sCDtLen);
+  char buf[60];
+  int n = dataframeToString(&(sCDt.s),buf);
+  Serial.write(buf,n);
+  Serial1.write((byte*)&sCDt,sCDtLen);
   delay(2000);
 }
 

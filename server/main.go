@@ -18,7 +18,7 @@ func main(){
 
   // Opening  Serial Port
   c := &serial.Config{
-    Name: "/dev/ttyUSB0",
+    Name: "/dev/ttyACM0",
     Baud: 9600,
     ReadTimeout: 100 * time.Millisecond,
   }
@@ -84,12 +84,12 @@ func main(){
       token.Wait()
     }
 
-    for i:=0; i < 4; i++ {
+    /*for i:=0; i < 4; i++ {
       _, err := s.Read(onebyte)
       if err == nil {
         fmt.Printf("%s",onebyte)
       }
-    }
+    }*/ // Now works well without this section of code
 
     if count == Limit-1 {
       count = 0

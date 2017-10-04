@@ -1,4 +1,5 @@
 #include <inttypes.h>
+#include <stdio.h>
 
 #define SISER_SiserReadyToTx 'A'
 #define SISER_RpiReadyToRx   'B'
@@ -29,4 +30,19 @@ struct siserCompleteDataframe_t {
   siser_t s;
   char End[4];
 };
+
+int dataframeToString(siser_t *s, char *buf){
+  return sprintf(buf,
+    "gasppm: %d\n"
+    "rain: %d\n"
+    "dht: {t:%f, h:%f}\n"
+    "gps: {la:%f, lo:%f}\n"
+    "lx: %d\n\n",
+    s->gasppm,
+    s->rain,
+    s->dht.t, s->dht.h,
+    s->gps.la, s->gps.lo,
+    s->lx
+  );
+}
 
