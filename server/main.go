@@ -18,7 +18,7 @@ func main(){
 
   // Opening  Serial Port
   c := &serial.Config{
-    Name: "/dev/ttyACM0",
+    Name: "/dev/ttyUSB0",
     Baud: 9600,
     ReadTimeout: 100 * time.Millisecond,
   }
