@@ -4,16 +4,19 @@ import (
   "fmt"
   "time"
   "bytes"
+  "net/http"
   "encoding/binary"
-  "../siser"
+  "github.com/kranfix/siser/siser"
   "github.com/tarm/serial"
 )
 
 func main(){
-  sDt := siser.SiserDataframe{}
+  // Reserving memory for SISER Dataframe
+  sDt := siser.SiserDataframe{}//  // Opening Serial Port
 
+  // Opening  Serial Port
   c := &serial.Config{
-    Name: "/dev/ttyUSB0", //"/dev/ttyUSB0"
+    Name: "/dev/ttyACM0",
     Baud: 9600,
     ReadTimeout: 100 * time.Millisecond,
   }
@@ -32,26 +35,48 @@ func main(){
     return
   }
 
-  //mySiser := siser.Siser{Id:1}
-  go func() {
-    B := make([]byte, binary.Size(sDt))
-    for {
-      n, err := s.Read(B)
-      buf := bytes.NewBuffer(B[:n])
-      fmt.Printf("% x",B[:n])
-      err = binary.Read(buf, binary.LittleEndian, &sDt)
-      if err == nil {
-        fmt.Printf("Rx: %v\n", B[:n])
-        fmt.Println(sDt)
+  // Dataframe Lecture
+  initialDataframe := []byte("OPEN")
+  onebyte := make([]byte, 1)
+  for { // loop
+    // Initial dataframe detection
+    i := 0
+    for i < 4 {
+      _, err := s.Read(onebyte)
+      if err != nil {
+        continue
+      } else if onebyte[0] == initialDataframe[i] {
+        i++
+        fmt.Printf("%s",onebyte)
+      } else {
+        i = 0
       }
     }
-  }()
+    fmt.Print(":")
+    // Dataframe
+    n := binary.Size(sDt)
+    B := make([]byte, n)
+    n, err := s.Read(B)
+    buf := bytes.NewBuffer(B[:])
+    //fmt.Printf("% x",B[:n])
+    err = binary.Read(buf, binary.LittleEndian, &sDt)
+    fmt.Println(sDt)
+    if err == nil {
+      strbuf := bytes.NewBufferString(sDt.String())
+      _, err := http.Post("http://localhost:1880/mongo",
+                          "application/json", strbuf)
+      if err != nil {
+        fmt.Println("Problem with local server")
+        fmt.Println(err)
+      }
+    }
 
-  timeout := time.After(15 * time.Second)
-  for {
-    select{
-    case <-timeout:
-      return
+    for i:=0; i < 4; i++ {
+      _, err := s.Read(onebyte)
+      if err == nil {
+        fmt.Printf("%s",onebyte)
+      }
     }
   }
+  fmt.Println("Unexpected infite loop exit.")
 }
