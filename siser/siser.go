@@ -26,13 +26,14 @@ type Siser struct {
 }
 
 func (d Dht) String() string{
-  return fmt.Sprintf("'dht':{'t':%[1]g,'h':%[2]g}",d.T,d.H)
+  return fmt.Sprintf("\"dht\":{\"t\":%[1]g,\"h\":%[2]g}",d.T,d.H)
 }
 
 func (g Gps) String() string{
-  return fmt.Sprintf("'gps':{'la':%g,'lo':%g}",g.La,g.Lo)
+  return fmt.Sprintf("\"gps\":{\"la\":%g,\"lo\":%g}",g.La,g.Lo)
 }
 
-func (s Siser) String() string{
-  return fmt.Sprintf("'%v':{'mq2':%v,'rain':%v,%v,%v,'lx':%v}", s.Id, s.Gasppm, s.Rain, s.Dht, s.Gps, s.Lx)
+func (s SiserDataframe) String() string{
+  return fmt.Sprintf("{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}",
+    s.Gasppm, s.Rain, s.Dht, s.Gps, s.Lx)
 }
