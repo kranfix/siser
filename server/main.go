@@ -3,11 +3,13 @@ package main
 import (
   "fmt"
   "time"
+  "log"
+  "os"
   "bytes"
-  "net/http"
   "encoding/binary"
-  "github.com/kranfix/siser/siser"
   "github.com/tarm/serial"
+  "github.com/eclipse/paho.mqtt.golang"
+  "github.com/kranfix/siser/siser"
 )
 
 func main(){
@@ -16,7 +18,7 @@ func main(){
 
   // Opening  Serial Port
   c := &serial.Config{
-    Name: "/dev/ttyACM0",
+    Name: "/dev/ttyUSB0",
     Baud: 9600,
     ReadTimeout: 100 * time.Millisecond,
   }
@@ -30,10 +32,23 @@ func main(){
     s.Close()
     fmt.Println("Serialport: Closed")
   }()
-  err = s.Flush()
+  /*err = s.Flush()
   if err != nil {
     return
-  }
+  }*/
+
+  // mqtt client
+	mqtt.DEBUG = log.New(os.Stdout, "", 0)
+	mqtt.ERROR = log.New(os.Stdout, "", 0)
+	opts := mqtt.NewClientOptions().AddBroker("tcp://190.90.6.43:1883").SetClientID("")
+	opts.SetKeepAlive(2 * time.Second)
+	opts.SetPingTimeout(1 * time.Second)
+
+  mqttClient := mqtt.NewClient(opts)
+	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
+		panic(token.Error())
+	}
+
 
   // Dataframe Lecture
   initialDataframe := []byte("OPEN")
@@ -65,15 +80,8 @@ func main(){
     err = binary.Read(buf, binary.LittleEndian, &sDt)
     fmt.Print(sDt)
     if err == nil {
-      strbuf := bytes.NewBufferString(sDt.String())
-      _, err := http.Post("http://localhost:1880/mongo",
-                          "application/json", strbuf)
-      if err != nil {
-        fmt.Println("Problem with local server")
-        fmt.Println(err)
-      } else {
-        fmt.Println(" ... Mongo ok!")
-      }
+      token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
+      token.Wait()
     }
 
     for i:=0; i < 4; i++ {
