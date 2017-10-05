@@ -1,11 +1,6 @@
 #include <inttypes.h>
 #include <stdio.h>
-
-#define SISER_SiserReadyToTx 'A'
-#define SISER_RpiReadyToRx   'B'
-#define SISER_
-typedef char SiserStatus;
-
+#include <stdlib.h>
 
 struct myDht_t {
   float t;
@@ -32,16 +27,20 @@ struct siserCompleteDataframe_t {
 };
 
 int dataframeToString(siser_t *s, char *buf){
+  String temp = String(s->dht.t);
+  String humi = String(s->dht.h);
+  String la = String(s->gps.la);
+  String lo = String(s->gps.lo);
   return sprintf(buf,
     "gasppm: %d\n"
     "rain: %d\n"
-    "dht: {t:%f, h:%f}\n"
-    "gps: {la:%f, lo:%f}\n"
+    "dht: {t:%s, h:%s}\n"
+    "gps: {la:%s, lo:%s}\n"
     "lx: %d\n\n",
     s->gasppm,
     s->rain,
-    s->dht.t, s->dht.h,
-    s->gps.la, s->gps.lo,
+    temp.c_str(), humi.c_str(),
+    la.c_str(), lo.c_str(),
     s->lx
   );
 }

@@ -1,6 +1,6 @@
 #include "siserconfig.h"
 #include <Wire.h>
-#include "DHT.h"
+#include <DHT.h>
 #include <TinyGPS.h>
 #include "siser.h"
 TinyGPS gps;
@@ -8,18 +8,14 @@ TinyGPS gps;
 DHT dht(DHTPIN, DHTTYPE);
 
 siserCompleteDataframe_t sCDt = {"OPEN",siser_t{},"CHAU"};
-//siserCompleteDataframe_t sCDt = {"OPEN",siser_t{}};
 byte sCDtLen = sizeof(sCDt);
 
-int Nivel_lluvia;
 int triger = 9;
 int echo = 8;
 int tiempo;
 int distancia;
 int BH1750_address = 0x23;
 byte buff[2];
-
-SiserStatus sStatus = SISER_SiserReadyToTx;
 
 void setup() {
   Wire.begin();
@@ -30,32 +26,20 @@ void setup() {
   pinMode(echo, INPUT);
   dht.begin();
   Serial.begin(9600);
-  Serial1.begin(9600);
+  xbeeSerial.begin(9600);
+  gpsSerial.begin(9600);
+  btSerial.begin(9600);
 }
 
 void loop() {
   readLightweightSensors();
   readHeavyweightSensors();
-  /*if (sStatus == SISER_SiserReadyToTx) {
-    Serial.write(sStatus);
-    if (Serial.available()) {
-      SiserStatus rStatus = (SiserStatus)Serial.read();
-      if (rStatus == SISER_RpiReadyToRx) {
-        sStatus = rStatus;
-      }
-    } else{
-      delay(1500);
-    }
-  } else if (sStatus == SISER_RpiReadyToRx) {
-    Serial.write((byte*)&s, sizeof(s));
-    if(Serial.available() {
-      
-    }
-  }*/
-  char buf[60];
+  
+  char buf[80];
   int n = dataframeToString(&(sCDt.s),buf);
   Serial.write(buf,n);
-  Serial1.write((byte*)&sCDt,sCDtLen);
+  xbeeSerial.write((byte*)&sCDt,sCDtLen);
+  btSerial.write(buf,n);
   delay(2000);
 }
 
@@ -82,20 +66,12 @@ void readLightweightSensors() {
   sCDt.s.gasppm = analogRead(mq2Pin);
 
   // Lectura de nidel de lluvia
-  Nivel_lluvia = analogRead(rainPin);
+  int Nivel_lluvia = analogRead(rainPin);
   sCDt.s.rain = map(Nivel_lluvia, 1023, 460, 0, 100);
 
-  // Lectura de distancia
-  /*digitalWrite(triger, LOW);     delayMicroseconds(2);
-  digitalWrite(triger, HIGH);    delayMicroseconds(10);
-  digitalWrite(triger, LOW);
-  tiempo = pulseIn(echo, HIGH); //distancia=340*tiempo/2 convertimos a las unidades correctas
-  distancia = (tiempo / 2) / 29.1; //distancia = velocidad*tiempo en cm
-  */
-  
   // Lectura del DHT22: Temperatura y Humedad
-  sCDt.s.dht.h = dht.readHumidity();
   sCDt.s.dht.t = dht.readTemperature();
+  sCDt.s.dht.h = dht.readHumidity();
 
   // Lectura de lumenes
   if (BH1750_Read(BH1750_address) == 2) {
@@ -111,8 +87,8 @@ void readHeavyweightSensors(){
 
   // For one second we parse GPS data and report some key values
   for (unsigned long start = millis(); millis() - start < 1000;) {
-    while (Serial1.available()) {
-      char c = Serial1.read();
+    while (gpsSerial.available()) {
+      char c = gpsSerial.read();
       // Serial.write(c); // uncomment this line if you want to see the GPS data flowing
       if (gps.encode(c)) // Did a new valid sentence come in?
         newData = true;
@@ -122,6 +98,6 @@ void readHeavyweightSensors(){
   if (newData)
   {
     unsigned long age;
-    gps.f_get_position(&sCDt.s.gps.la, &sCDt.s.gps.lo, &age);
+    gps.f_get_position(&(sCDt.s.gps.la), &(sCDt.s.gps.lo), &age);
   }
 }
