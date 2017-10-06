@@ -1,4 +1,4 @@
-package siser
+package dataframe
 
 import "fmt"
 
@@ -12,7 +12,7 @@ type Gps struct {
   Lo float32
 }
 
-type SiserDataframe struct {
+type Dataframe struct {
   Gasppm uint16
   Rain uint8
   Dht
@@ -33,7 +33,7 @@ func (g Gps) String() string{
   return fmt.Sprintf("\"gps\":{\"la\":%g,\"lo\":%g}",g.La,g.Lo)
 }
 
-func (s SiserDataframe) String() string{
+func (d Dataframe) String() string{
   return fmt.Sprintf("{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}",
-    s.Gasppm, s.Rain, s.Dht, s.Gps, s.Lx)
+    d.Gasppm, d.Rain, d.Dht, d.Gps, d.Lx)
 }
