@@ -22,7 +22,7 @@ type Dataframe struct {
 
 type Siser struct {
   Id uint32
-  SiserDataframe
+  Dataframe
 }
 
 func (d Dht) String() string{

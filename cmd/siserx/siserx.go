@@ -9,12 +9,12 @@ import (
   "encoding/binary"
   "github.com/tarm/serial"
   "github.com/eclipse/paho.mqtt.golang"
-  "github.com/kranfix/siser/siser"
+  sdf "github.com/kranfix/siser/dataframe"
 )
 
 func main(){
   // Reserving memory for SISER Dataframe
-  sDt := siser.SiserDataframe{}//  // Opening Serial Port
+  sDt := sdf.Dataframe{}//  // Opening Serial Port
 
   // Opening  Serial Port
   c := &serial.Config{
