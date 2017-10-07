@@ -10,8 +10,6 @@ DHT dht(DHTPIN, DHTTYPE);
 siserCompleteDataframe_t sCDt = {"OPEN",siser_t{},"CHAU"};
 byte sCDtLen = sizeof(sCDt);
 
-int triger = 9;
-int echo = 8;
 int tiempo;
 int distancia;
 
@@ -20,7 +18,6 @@ void setup() {
   BH1750_Init(BH1750_address);
   pinMode(mq2Pin, INPUT);
   pinMode(rainPin, INPUT);
-  pinMode(triger, OUTPUT);
   pinMode(echo, INPUT);
   dht.begin();
   Serial.begin(9600);
