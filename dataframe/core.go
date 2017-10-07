@@ -12,7 +12,7 @@ type Gps struct {
   Lo float32
 }
 
-type Dataframe struct {
+type Core struct {
   Gasppm uint16
   Rain uint8
   Dht
@@ -20,10 +20,7 @@ type Dataframe struct {
   Lx float32
 }
 
-type Siser struct {
-  Id uint32
-  Dataframe
-}
+
 
 func (d Dht) String() string{
   return fmt.Sprintf("\"dht\":{\"t\":%[1]g,\"h\":%[2]g}",d.T,d.H)
@@ -33,7 +30,7 @@ func (g Gps) String() string{
   return fmt.Sprintf("\"gps\":{\"la\":%g,\"lo\":%g}",g.La,g.Lo)
 }
 
-func (d Dataframe) String() string{
+func (c Core) String() string{
   return fmt.Sprintf("{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}",
-    d.Gasppm, d.Rain, d.Dht, d.Gps, d.Lx)
+    c.Gasppm, c.Rain, c.Dht, c.Gps, c.Lx)
 }
