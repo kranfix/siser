@@ -12,6 +12,9 @@ func main(){
   gps := sdt.Gps{La:-22.01,Lo:-17.04}
   fmt.Println(gps)
 
-  sDt := sdt.Dataframe{750, 16, dht, gps, 50}
-  fmt.Println(sDt)
+  sCore := sdt.Core{750, 16, dht, gps, 50}
+  fmt.Println(sCore)
+
+  sDataframe := sdt.NewDataframe("HOLA","CHAU")
+  fmt.Println(sDataframe)
 }
