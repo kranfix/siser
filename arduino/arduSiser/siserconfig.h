@@ -21,4 +21,5 @@
 #define btSerial Serial3
 
 // Lx sensor
+#define BH1750_address 0x23
 
