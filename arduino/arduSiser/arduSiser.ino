@@ -27,11 +27,16 @@ void setup() {
   xbeeSerial.begin(9600);
   gpsSerial.begin(9600);
   btSerial.begin(9600);
+#ifdef DEBUG
+  sCDt.s = sEx;
+#endif
 }
 
 void loop() {
+#ifndef DEBUG
   readLightweightSensors();
   readHeavyweightSensors();
+#endif
   
   char buf[80];
   int n = dataframeToString(&(sCDt.s),buf);

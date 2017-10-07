@@ -1,5 +1,8 @@
 /* Sensors pinout configurations */
 
+// Debug
+//#define DEBUG
+
 // xbeeSerial
 #define xbeeSerial Serial1
 

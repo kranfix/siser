@@ -1,6 +1,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "siserconfig.h"
 
 struct myDht_t {
   float t;
@@ -45,3 +46,12 @@ int dataframeToString(siser_t *s, char *buf){
   );
 }
 
+#ifdef DEBUG
+siser_t sEx = { // siser Example
+  1000, // gasppm
+  15,   // rain
+  {23.5,51}, //dht:t,h
+  {-12.0966515,-77.0306064}, // gps:la,lo
+  55   // lx
+};
+#endif
