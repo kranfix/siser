@@ -6,9 +6,9 @@ import (
 )
 
 func main(){
-  dht := sdt.Dht{T:23.5,H:51.7}
-  gps := sdt.Gps{La:-12.01,Lo:-17.04}
-  sCore1 := sdt.Core{750, 16, dht, gps, 50}
+  dht := sdt.Dht{T:23.5,H:51.0}
+  gps := sdt.Gps{La:-12.0966515,Lo:-77.03060644}
+  sCore1 := sdt.Core{1000, 15, dht, gps, 55}
   sCore2 := sdt.Core{} // without data
 
   b, err := sCore1.ToBytes()

@@ -16,5 +16,6 @@ func main(){
   fmt.Println(sCore)
 
   sDataframe := sdt.NewDataframe("HOLA","CHAU")
+  sDataframe.Core = sCore
   fmt.Println(sDataframe)
 }

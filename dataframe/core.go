@@ -18,7 +18,7 @@ type Gps struct {
 
 type Core struct {
   Gasppm uint16
-  Rain uint8
+  Rain uint16
   Dht
   Gps
   Lx float32

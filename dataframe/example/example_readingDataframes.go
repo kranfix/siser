@@ -9,12 +9,13 @@ func main() {
   d := sdt.NewDataframe("OPEN","CHAU")
 
   msg := [][]byte{
-    []byte("OPEXNOPEN01234567899876543210012CHAUOPOPEN3456789987"),
+    []byte("OPEXNOPEN012345678998765432100123CHAUOPOPEN3456789987"),
     []byte("654321001234"),
-    []byte("5CH"),
+    []byte("5"),
+    []byte("6CH"),
     []byte("AUOP"),
     []byte("E"),
-    []byte("N01234567899876543210012CHAU"),
+    []byte("N012345678998765432100123CHAU"),
   }
 
   var readed bool
@@ -26,7 +27,7 @@ func main() {
       if readed {
         fmt.Println("  Completed")
         fmt.Printf("    %s\n",d.Bytes())
-        d.CleanBytes()
+        d.CleanBytes('-')
         fmt.Println("    Cleaning buffer")
       } else {
         fmt.Printf("  Pending message: %d bytes.\n",len(m)-n+1)

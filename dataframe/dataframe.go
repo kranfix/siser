@@ -42,9 +42,9 @@ func (d *Dataframe) Bytes() []byte {
   return d.bytes
 }
 
-func (d *Dataframe) CleanBytes() {
+func (d *Dataframe) CleanBytes(c byte) {
   for i:= range d.bytes {
-    d.bytes[i] = 64
+    d.bytes[i] = c
   }
 }
 
