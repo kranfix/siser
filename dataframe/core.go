@@ -37,6 +37,10 @@ func (c Core) String() string{
     c.Gasppm, c.Rain, c.Dht, c.Gps, c.Lx)
 }
 
+func (c *Core) Size () int {
+  return binary.Size(c)
+}
+
 // Parse bytes in little endian
 func (c *Core) ParseBytes(b []byte) error {
   buf := bytes.NewBuffer(b[:])
