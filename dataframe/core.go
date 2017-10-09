@@ -17,8 +17,11 @@ type Gps struct {
 }
 
 type Core struct {
-  Gasppm uint16
+  // Review this for an improvement
+  //id uint8
+  //Rain uint8
   Rain uint16
+  Gasppm uint16
   Dht
   Gps
   Lx float32
@@ -33,8 +36,10 @@ func (g Gps) String() string{
 }
 
 func (c Core) String() string{
-  return fmt.Sprintf("{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}",
-    c.Gasppm, c.Rain, c.Dht, c.Gps, c.Lx)
+  id := uint8(c.Rain & 0x00FF)
+  rain := uint8(c.Rain >> 8)
+  return fmt.Sprintf("{\"%d\":{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}}",
+    id, c.Gasppm, rain, c.Dht, c.Gps, c.Lx)
 }
 
 func (c *Core) Size () int {
