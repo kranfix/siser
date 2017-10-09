@@ -14,8 +14,9 @@ struct myGps_t {
 };
 
 struct siser_t {
+  uint8_t id;
+  uint8_t rain;     // 0-100%
   uint16_t gasppm; // 0-1000 ppm
-  uint16_t rain;     // 0-100%
   myDht_t dht;
   myGps_t gps;
   float lx;
@@ -34,13 +35,15 @@ int dataframeToString(siser_t *s, char *buf){
   String lo = String(s->gps.lo);
   String lx = String(s->lx);
   return sprintf(buf,
-    "gasppm: %d\n"
+    "id: %d\n"
     "rain: %d\n"
+    "gasppm: %d\n"
     "dht: {t:%s, h:%s}\n"
     "gps: {la:%s, lo:%s}\n"
     "lx: %s\n\n",
-    s->gasppm,
+    s->id,
     s->rain,
+    s->gasppm,
     temp.c_str(), humi.c_str(),
     la.c_str(), lo.c_str(),
     lx.c_str()
@@ -48,8 +51,9 @@ int dataframeToString(siser_t *s, char *buf){
 }
 
 siser_t sEx = { // siser Example
-  1000, // gasppm
+  1, // id a modificar 0 - 255
   15,   // rain
+  1000, // gasppm
   {23.5,51}, //dht:t,h
   {-12.0966515,-77.0306064}, // gps:la,lo
   55   // lx
