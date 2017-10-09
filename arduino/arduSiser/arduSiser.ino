@@ -3,30 +3,29 @@
 #include <TinyGPS.h>
 #include "siser.h"
 #include "lx.h"
-TinyGPS gps;
 
+TinyGPS gps;
 DHT dht(DHTPIN, DHTTYPE);
 
-siserCompleteDataframe_t sCDt = {"OPEN",siser_t{},"CHAU"};
+siserCompleteDataframe_t sCDt = {
+  {'O','P','E','N'},
+  sEx,
+  {'C','H','A','U'}
+};
 byte sCDtLen = sizeof(sCDt);
 
-int tiempo;
-int distancia;
-
 void setup() {
+  Serial.begin(9600);
+  xbeeSerial.begin(9600);
+  btSerial.begin(9600);
+
+  gpsSerial.begin(9600);
   Wire.begin();
   BH1750_Init(BH1750_address);
   pinMode(mq2Pin, INPUT);
   pinMode(rainPin, INPUT);
   pinMode(echo, INPUT);
   dht.begin();
-  Serial.begin(9600);
-  xbeeSerial.begin(9600);
-  gpsSerial.begin(9600);
-  btSerial.begin(9600);
-#ifdef DEBUG
-  sCDt.s = sEx;
-#endif
 }
 
 void loop() {
@@ -34,7 +33,7 @@ void loop() {
   readLightweightSensors();
   readHeavyweightSensors();
 #endif
-  
+
   char buf[80];
   int n = dataframeToString(&(sCDt.s),buf);
   Serial.write(buf,n);
@@ -43,6 +42,7 @@ void loop() {
   delay(2000);
 }
 
+#ifndef DEBUG
 void readLightweightSensors() {
   // Lectura de nivel de gas
   sCDt.s.gasppm = analogRead(mq2Pin);
@@ -83,3 +83,4 @@ void readHeavyweightSensors(){
     gps.f_get_position(&(sCDt.s.gps.la), &(sCDt.s.gps.lo), &age);
   }
 }
+#endif

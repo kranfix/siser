@@ -15,7 +15,7 @@ struct myGps_t {
 
 struct siser_t {
   uint16_t gasppm; // 0-1000 ppm
-  byte rain;     // 0-100%
+  uint16_t rain;     // 0-100%
   myDht_t dht;
   myGps_t gps;
   float lx;
@@ -32,17 +32,18 @@ int dataframeToString(siser_t *s, char *buf){
   String humi = String(s->dht.h);
   String la = String(s->gps.la);
   String lo = String(s->gps.lo);
+  String lx = String(s->lx);
   return sprintf(buf,
     "gasppm: %d\n"
     "rain: %d\n"
     "dht: {t:%s, h:%s}\n"
     "gps: {la:%s, lo:%s}\n"
-    "lx: %d\n\n",
+    "lx: %s\n\n",
     s->gasppm,
     s->rain,
     temp.c_str(), humi.c_str(),
     la.c_str(), lo.c_str(),
-    s->lx
+    lx.c_str()
   );
 }
 

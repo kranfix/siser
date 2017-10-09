@@ -14,7 +14,7 @@
 
 
 // DHT sensor
-#define DHTPIN 7    
+#define DHTPIN 7
 #define DHTTYPE DHT22
 
 // GPS
@@ -25,4 +25,3 @@
 
 // Lx sensor
 #define BH1750_address 0x23
-
