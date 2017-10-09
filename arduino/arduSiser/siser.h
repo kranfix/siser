@@ -51,7 +51,7 @@ int dataframeToString(siser_t *s, char *buf){
 }
 
 siser_t sEx = { // siser Example
-  1, // id a modificar 0 - 255
+  ID, // id a modificar 0 - 255
   15,   // rain
   1000, // gasppm
   {23.5,51}, //dht:t,h

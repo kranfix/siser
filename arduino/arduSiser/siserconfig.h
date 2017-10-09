@@ -3,6 +3,11 @@
 // Debug
 //#define DEBUG
 
+// Device id:
+//    type: byte or uint8_t
+//    from 0 to 255
+#define ID 1
+
 // xbeeSerial
 #define xbeeSerial Serial1
 
