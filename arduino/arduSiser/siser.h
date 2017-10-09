@@ -47,7 +47,6 @@ int dataframeToString(siser_t *s, char *buf){
   );
 }
 
-#ifdef DEBUG
 siser_t sEx = { // siser Example
   1000, // gasppm
   15,   // rain
@@ -55,4 +54,3 @@ siser_t sEx = { // siser Example
   {-12.0966515,-77.0306064}, // gps:la,lo
   55   // lx
 };
-#endif

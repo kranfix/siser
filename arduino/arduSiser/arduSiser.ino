@@ -24,7 +24,6 @@ void setup() {
   BH1750_Init(BH1750_address);
   pinMode(mq2Pin, INPUT);
   pinMode(rainPin, INPUT);
-  pinMode(echo, INPUT);
   dht.begin();
 }
 
@@ -34,7 +33,7 @@ void loop() {
   readHeavyweightSensors();
 #endif
 
-  char buf[80];
+  char buf[128];
   int n = dataframeToString(&(sCDt.s),buf);
   Serial.write(buf,n);
   xbeeSerial.write((byte*)&sCDt,sCDtLen);
