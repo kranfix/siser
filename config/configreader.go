@@ -5,10 +5,11 @@ import (
   "os"
   "encoding/json"
   "io/ioutil"
+  "github.com/tarm/serial"
 )
 
 type Config struct {
-  Serial string
+  Serial serial.Config
   Mqtt Mqtt
 }
 

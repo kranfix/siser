@@ -1,5 +1,8 @@
 {
-  "serial":"/dev/ttyUSB0",
+  "serial":{
+    "Name":"/dev/ttyUSB0",
+    "Baud": 9600
+  },
   "mqtt":{
     "Server":"tcp://190.248.48.2:1883",
     "User":"myUser",
