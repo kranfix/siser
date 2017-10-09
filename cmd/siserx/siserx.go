@@ -3,10 +3,8 @@ package main
 import (
   "fmt"
   "time"
-  "log"
-  "os"
-  "bytes"
-  "encoding/binary"
+  //"log"
+  //"os"
   "github.com/tarm/serial"
   "github.com/eclipse/paho.mqtt.golang"
   sdf "github.com/kranfix/siser/dataframe"
@@ -14,7 +12,7 @@ import (
 
 func main(){
   // Reserving memory for SISER Dataframe
-  sDt := sdf.Dataframe{}//  // Opening Serial Port
+  sDt := sdf.NewDataframe("OPEN","CHAU")
 
   // Opening  Serial Port
   c := &serial.Config{
@@ -38,11 +36,11 @@ func main(){
   }*/
 
   // mqtt client
-	mqtt.DEBUG = log.New(os.Stdout, "", 0)
-	mqtt.ERROR = log.New(os.Stdout, "", 0)
+	//mqtt.DEBUG = log.New(os.Stdout, "", 0)
+	//mqtt.ERROR = log.New(os.Stdout, "", 0)
 	opts := mqtt.NewClientOptions().AddBroker("tcp://190.90.6.43:1883").SetClientID("")
 	opts.SetKeepAlive(2 * time.Second)
-	opts.SetPingTimeout(1 * time.Second)
+	opts.SetPingTimeout(1000 * time.Millisecond)
 
   mqttClient := mqtt.NewClient(opts)
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
@@ -51,49 +49,24 @@ func main(){
 
 
   // Dataframe Lecture
-  initialDataframe := []byte("OPEN")
-  onebyte := make([]byte, 1)
 
-  // Counts the number of blocks to read
-  Limit := 4
-  for count := 0; count < Limit; count++ { // loop
-    // Initial dataframe detection
-    for i := 0; i < 4;  {
-      _, err := s.Read(onebyte)
-      if err != nil {
-        continue
-      } else if onebyte[0] == initialDataframe[i] {
-        i++
-        fmt.Printf("%s",onebyte)
-      } else {
-        i = 0
-      }
+  Bytes := make([]byte, 128)
+  var N int
+  for {
+    // Reading serialport
+    if N, err = s.Read(Bytes); err != nil {
+      continue
     }
 
-    fmt.Print(":")
-    // Dataframe
-    n := binary.Size(sDt)
-    B := make([]byte, n)
-    n, err := s.Read(B)
-    buf := bytes.NewBuffer(B[:])
-    //fmt.Printf("% x",B[:n])
-    err = binary.Read(buf, binary.LittleEndian, &sDt)
-    fmt.Print(sDt)
-    if err == nil {
-      token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
-      token.Wait()
-    }
-
-    /*for i:=0; i < 4; i++ {
-      _, err := s.Read(onebyte)
-      if err == nil {
-        fmt.Printf("%s",onebyte)
+    readed := false
+    for n,k:= 0,0; n < N; n += k {
+      k,readed = sDt.Detect(Bytes[n:N])
+      if readed {
+        //fmt.Printf("% x\n",Dt.Bytes())
+        fmt.Println(sDt)
+        token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
+        token.Wait()
       }
-    }*/ // Now works well without this section of code
-
-    if count == Limit-1 {
-      count = 0
-      time.Sleep(4 * time.Second)
     }
 
   }
