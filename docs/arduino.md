@@ -61,14 +61,14 @@ Opera de la misma manera que el pruerto Serial0 y muestra el mismo mensaje para 
 La trama de comunicación envía la trama cruda tal como es guardada en memoria en formato little endian con una cabecera (header) "OPEN" y pie (footer) "CHAU" con una trama de comunicación.
 El formato de la trama es la siguiente:
 
-- ID:    uint8 <--> 1 bytes
 - HEAD:  byte[4] <--> 4 bytes
+- ID:    uint8 <--> 1 bytes
 - Rain:  uint8 <--> 1 bytes
 - MQ2:   uint16 <--> 2 bytes
 - DHT22: [float32,float32] <--> 8 bytes
 - GPS:   [float32,float32] <--> 8 bytes
-- MQ2:   float32 <--> 4 bytes
-- FOOD:  byte[4] <--> 4 bytes
+- lx:   float32 <--> 4 bytes
+- FOOT:  byte[4] <--> 4 bytes
 
 # TODO
 En futuros trabajos, se plantear preparar el programa para trabajar un hilo en background que se encargue de la detección de rayos para generar alertas, sea de daño o de alerta temprana.
