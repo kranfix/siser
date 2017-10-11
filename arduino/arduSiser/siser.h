@@ -15,7 +15,7 @@ struct myGps_t {
 
 struct siser_t {
   uint8_t id;
-  uint8_t rain;     // 0-100%
+  uint8_t rain;    // 0-100%
   uint16_t gasppm; // 0-1000 ppm
   myDht_t dht;
   myGps_t gps;

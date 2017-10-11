@@ -3,6 +3,7 @@
 #include <TinyGPS.h>
 #include "siser.h"
 #include "lx.h"
+#include "xbeeDataframe.h"
 
 TinyGPS gps;
 DHT dht(DHTPIN, DHTTYPE);
@@ -36,7 +37,9 @@ void loop() {
   char buf[128];
   int n = dataframeToString(&(sCDt.s),buf);
   Serial.write(buf,n);
-  xbeeSerial.write((byte*)&sCDt,sCDtLen);
+  if(xbeeLisening()){
+   xbeeSerial.write((byte*)&sCDt,sCDtLen); 
+  }
   btSerial.write(buf,n);
   delay(2000);
 }
