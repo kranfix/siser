@@ -49,26 +49,36 @@ func main(){
 
 
   // Dataframe Lecture
-
   Bytes := make([]byte, 128)
   var N int
-  for {
-    // Reading serialport
-    if N, err = s.Read(Bytes); err != nil {
-      continue
-    }
+  xbeeBuf := []byte("REQ_")
+  xbeeMax := byte(6)
+  RequestXbee:
+  for i := byte(1); i <= xbeeMax; i++ {
+    // Request of data
+    xbeeBuf[3] = 7
+    s.Write(xbeeBuf)
 
-    readed := false
-    for n,k:= 0,0; n < N; n += k {
-      k,readed = sDt.Detect(Bytes[n:N])
-      if readed {
-        //fmt.Printf("% x\n",Dt.Bytes())
-        fmt.Println(sDt)
-        token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
-        token.Wait()
+    // Waiting for response
+    for {
+      // Reading serialport
+      if N, err = s.Read(Bytes); err != nil {
+        continue
+      }
+
+      readed := false
+      for n,k:= 0,0; n < N; n += k {
+        k,readed = sDt.Detect(Bytes[n:N])
+        if readed {
+          //fmt.Printf("% x\n",Dt.Bytes())
+          fmt.Println(sDt)
+          token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
+          token.Wait()
+          goto RequestXbee
+        }
       }
     }
-
   }
+  goto RequestXbee
   fmt.Println("Unexpected infite loop exit.")
 }
