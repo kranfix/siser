@@ -2,6 +2,7 @@ package dataframe
 
 import (
   "fmt"
+  "math"
   "bytes"
   "encoding/binary"
 )
@@ -38,7 +39,22 @@ func (g Gps) String() string{
 func (c Core) String() string{
   id := uint8(c.Rain & 0x00FF)
   rain := uint8(c.Rain >> 8)
-  return fmt.Sprintf("{\"%d\":{\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}}",
+  if math.IsNaN(float64(c.Dht.T)) {
+    c.Dht.T = -273
+  }
+  if math.IsNaN(float64(c.Dht.H)) {
+    c.Dht.H = -1
+  }
+  if math.IsNaN(float64(c.Gps.La)) {
+    c.Gps.La = 360.0
+  }
+  if math.IsNaN(float64(c.Gps.Lo)) {
+    c.Gps.Lo = 360.0
+  }
+  if math.IsNaN(float64(c.Lx)) {
+    c.Lx = -1.0
+  }
+  return fmt.Sprintf("{\"xid\":\"%d\",\"mq2\":%v,\"rain\":%v,%v,%v,\"lx\":%v}",
     id, c.Gasppm, rain, c.Dht, c.Gps, c.Lx)
 }
 
