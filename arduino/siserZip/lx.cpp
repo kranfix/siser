@@ -1,5 +1,4 @@
-#include "lx.h"
-#include <Wire.h>
+#include "components.h"
 
 byte buff[2];
 
