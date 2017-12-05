@@ -1,4 +1,5 @@
 /* Sensors pinout configurations */
+#include <Arduino.h>  
 
 // Debug
 //#define DEBUG
@@ -11,7 +12,6 @@
 // Use from 1 to 6
 #define ID 5
 
-
 // xbeeSerial
 #define xbeeSerial Serial
 #define XBEE_INIT {'R','E','Q'}
@@ -21,8 +21,7 @@
 #define mq2Pin A0
 
 // Rain sensor
-#define rainPin A1
-
+#define rainPin A13 //15 // ADC13
 
 // DHT sensor
 #define DHTPIN 7
