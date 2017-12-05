@@ -2,7 +2,7 @@
 #include <Arduino.h>  
 
 // Debug
-//#define DEBUG
+#define DEBUG
 
 // Device id:
 //    type: byte or uint8_t
@@ -18,13 +18,13 @@
 #define XBEE_INIT_LEN 3
 
 // MQ2 sensor
-#define mq2Pin A0
+#define mq2Pin  A15 // GPIO12, ADC15
 
 // Rain sensor
-#define rainPin A13 //15 // ADC13
+#define rainPin A13 // GPIO15, ADC13
 
 // DHT sensor
-#define DHTPIN 7
+#define DHTPIN 13
 #define DHTTYPE DHT22
 
 // GPS
