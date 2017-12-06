@@ -58,7 +58,6 @@ func main(){
     for {
       N, err := s.Read(Bytes)
       if  err != nil {
-        //println("Device ",i," unavailable")
         continue
       }
 
@@ -82,22 +81,6 @@ func main(){
     println("- Device: ",i)
     xbeeBuf[3] = i
     s.Write(xbeeBuf)
-
-    // Reading serialport
-    /*if N, err = s.Read(Bytes); err != nil {
-      println("Device ",i," unavailable")
-      continue
-    }
-
-    readed := false
-    for n,k:= 0,0; n < N; n += k {
-      k,readed = sDt.Detect(Bytes[n:N])
-      if readed {
-        fmt.Println(sDt)
-        token := mqttClient.Publish("incuba/peru", 0, false, sDt.String())
-        token.Wait()
-      }
-    }*/
     time.Sleep(500 * time.Millisecond)
   }
   println("waiting 8 seconds ...\n\n")
