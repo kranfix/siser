@@ -1,11 +1,11 @@
 #include "solarTracker.h"
 #include <Arduino.h>
 
-const int lowerThreshold = 0 * 256 / 20;
-const int upperThreshold = 3.5 * 256 / 20;
+const int lowerThreshold = 1 * 256 / 40;
+const int upperThreshold = 4 * 256 / 40;
 const int middle = (lowerThreshold + upperThreshold) / 2;
 
-const int tol = 300; // tolerance
+const int tol = 250; // tolerance
 
 void solarTracker_begin(solarTracker_t * st){
   ledcAttachPin(st->servoPin.azimut, st->servoChannel.azimut);

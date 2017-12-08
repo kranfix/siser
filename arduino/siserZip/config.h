@@ -10,7 +10,7 @@
 // 0 id is reserved for raspberry
 // 7 is reserved for demo in office
 // Use from 1 to 6
-#define ID 5
+#define ID 7
 
 // xbeeSerial
 #define xbeeSerial Serial

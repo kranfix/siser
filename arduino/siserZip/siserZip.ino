@@ -5,12 +5,14 @@
 #include "components.h"
 #include "solarTracker.h"
 
+const unsigned long daymillis = 24 * 3600 * 1000;
+
 HardwareSerial Serial2(2);
 
 TinyGPS gps;
 DHT dht(DHTPIN, DHTTYPE);
 
-unsigned long now, last;
+unsigned long now, lastDebug, lastGps, lastSolarTracker;
 
 solarTracker_t st = {
   { // servo Pin
@@ -45,33 +47,45 @@ void setup() {
   pinMode(mq2Pin, INPUT);
   pinMode(rainPin, INPUT);
   dht.begin();
+  
   solarTracker_begin(&st);
+  lastSolarTracker = millis();
 
-  last = millis();
+  lastDebug = millis();
+  readGps();
+  
+  lastGps = millis();
 }
 
 void loop() {
   now = millis();
-  if (now - last >= 2000){
-#ifndef DEBUG
+  if (now - lastDebug >= 2000){
     readSensors();
-    readGps();
-#endif
-
     char buf[128];
-    //int n = dataframeToString(&(sCDt.s),buf);
-    //Serial.write(buf,n);
-    if(xbeeLisening()){
-     xbeeSerial.write((byte*)&sCDt,sCDtLen);
-    }
-    last = now;
+    size_t n = dataframeToString(&(sCDt.s),&buf[0]);
+    Serial.write((byte*)buf,n);
+    lastDebug = now;
   }
 
-  solarTracker_loop(&st);
+  if(xbeeLisening()){
+    xbeeSerial.write((byte*)&sCDt,sCDtLen);
+  }
+
+  now = millis();
+  if (now - lastGps >= daymillis){
+    readGps();
+    lastGps = now;
+  }
+
+  now = millis();
+  if (now - lastSolarTracker >= 100){
+    solarTracker_loop(&st);
+    lastSolarTracker = now;
+  }
 }
 
-#ifndef DEBUG
 void readSensors() {
+#ifndef DEBUG
   // Lectura de nivel de gas  
   sCDt.s.gasppm = analogRead(mq2Pin);
 
@@ -87,9 +101,11 @@ void readSensors() {
   if (BH1750_Read(BH1750_address) == 2) {
     sCDt.s.lx = ((buff[0] << 8) | buff[1]) / 1.2;
   }
+#endif
 }
 
 void readGps(){
+#ifndef DEBUG
   // Lectura del GPS
   bool newData = false;
   unsigned long chars;
@@ -110,5 +126,5 @@ void readGps(){
     unsigned long age;
     gps.f_get_position(&(sCDt.s.gps.la), &(sCDt.s.gps.lo), &age);
   }
-}
 #endif
+}
