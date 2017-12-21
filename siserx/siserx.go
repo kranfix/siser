@@ -3,6 +3,7 @@ package main
 import (
   "fmt"
   "time"
+  "flag"
   //"log"
   //"os"
   "github.com/tarm/serial"
@@ -10,14 +11,23 @@ import (
   sdf "github.com/kranfix/siser/dataframe"
 )
 
+var (
+  broker     string = "tcp://190.90.6.43:1883"
+  serialPort string = "/dev/ttyUSB0"
+  baud       int    = 9600
+)
+
 func main(){
+  flag.StringVar(&serialPort,"p", serialPort, "Serial port")
+  flag.Parse()
+
   // Reserving memory for SISER Dataframe
   sDt := sdf.NewDataframe("OPEN","CHAU")
 
   // Opening  Serial Port
   c := &serial.Config{
-    Name: "/dev/ttyUSB0",
-    Baud: 9600,
+    Name: serialPort,
+    Baud: baud,
     ReadTimeout: 3000 * time.Millisecond,
   }
   s, err := serial.OpenPort(c)
@@ -35,14 +45,7 @@ func main(){
     return
   }*/
 
-  // mqtt client
-	//mqtt.DEBUG = log.New(os.Stdout, "", 0)
-	//mqtt.ERROR = log.New(os.Stdout, "", 0)
-	opts := mqtt.NewClientOptions().AddBroker("tcp://190.90.6.43:1883").SetClientID("")
-	opts.SetKeepAlive(2 * time.Second)
-	opts.SetPingTimeout(3000 * time.Millisecond)
-
-  mqttClient := mqtt.NewClient(opts)
+  mqttClient := createMqttClient()
 	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
@@ -88,4 +91,19 @@ func main(){
   goto RequestXbee
 
   fmt.Println("Unexpected infite loop exit.")
+}
+
+func createMqttClient() mqtt.Client {
+  //mqtt.DEBUG = log.New(os.Stdout, "", 0)
+	//mqtt.ERROR = log.New(os.Stdout, "", 0)
+  opts := mqtt.NewClientOptions().AddBroker(broker).SetClientID("")
+	opts.SetKeepAlive(2 * time.Second)
+	opts.SetPingTimeout(3000 * time.Millisecond)
+
+  mqttClient := mqtt.NewClient(opts)
+	if token := mqttClient.Connect(); token.Wait() && token.Error() != nil {
+		panic(token.Error())
+	}
+
+  return mqttClient
 }
