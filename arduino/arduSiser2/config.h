@@ -12,7 +12,7 @@
 #define ID 1
 
 // Rain sensor
-#define rainPin A3
+#define rainPin A2
 
 
 // DHT sensor
@@ -20,7 +20,7 @@
 #define DHTTYPE DHT22
 
 // Battery Pin
-#define batPin A0
+#define batPin A3
 
 // Attachable Pin: 2 and 3 in Arduino Nano
 #define wakeRtcPin 2     // pin used for waking up
