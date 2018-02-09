@@ -3,6 +3,7 @@
 #include "siser.h"
 #include "sleep.h"
 #include <RTClibExtended.h>
+#include <EEPROM.h>
 
 RTC_DS3231 RTC;
 
@@ -10,7 +11,31 @@ DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(9600);
-  //pinMode(3,INPUT);
+
+#ifdef CLEAREEPROM
+  Serial.println("Iniciando borrado de ");
+  for (int i = 0 ; i < EEPROM.length() ; i++) {
+    EEPROM.write(i, 0);
+  }
+  delay(100);
+  Serial.println("Limpiado de EEPROM terminado.");
+  Serial.println("Reprogramar sin la constante CLEAREEPROM");
+  for(;;);
+#else
+  Serial.println("Iniciando lectura de EEPROM");
+  if(EEPROM.read(RtcSetDir) == 0){
+    // Here goes code for setting RTC
+    // date and time in compilation time
+    
+    Serial.println("Ingresé a configurar RTC");
+    EEPROM.write(RtcSetDir, 1);
+  } else {
+    Serial.println("No ingresé a configurar RTC");
+  }
+  Serial.println("Etapa de configuracion de RTC terminada");
+  delay(100);
+#endif
+  
   pinMode(rainPin, INPUT);
   pinMode(LED_BUILTIN,OUTPUT);
   dht.begin();

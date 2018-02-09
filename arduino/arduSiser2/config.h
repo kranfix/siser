@@ -3,6 +3,9 @@
 // Debug
 //#define DEBUG
 
+// Setting EEPROM memory
+//#define CLEAREEPROM
+
 // Device id:
 //    type: byte or uint8_t
 //    from 0 to 255
@@ -28,3 +31,6 @@
 
 #define wakeButtonPin 3     // pin used for waking up
 #define wakeOnButton  LOW
+
+// EEPROM
+#define RtcSetDir 0
