@@ -4,7 +4,7 @@ ArduSiser2
 Esta versión de Siser está pensada para trabajar bajo Arduino Nano,
 el cual está en modo sleep para ahorrar la mayor cantidad de energía
 y se despierta mediante un pulsador o mediante una interrupción generada
-por un Real Time Clock (RTC, [click para ver su configuración](RTC.md)).
+por un Real Time Clock (RTC).
 
 
 ## Dependencias
@@ -37,3 +37,14 @@ El resto de pines quedan a su completa disposición.
 En caso no se cuente con los sensores, al actibar el modo  DEBUG
 (`#define DEBUG`), el programa fijará datos para las variables medidas
 y así no enviar valores no legibles (como NAN).
+
+## Configuración del RTC
+
+El RTC DS3231 debe tener la hora configurada, para esto se debe
+seguir el siguiente procedimiento:
+
+- En el archivo config.h, descomentar la línea `#define CLEAREEPROM`.
+- Programar el arduino (botón Upload del Arduino IDE).
+- Esperar a que salga el mensaje de terminado en el Serial Monitor.
+- Volver a comentar la línea `#define CLEAREEPROM`.
+- Volver a programar el arduino IDE.
