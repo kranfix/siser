@@ -10,8 +10,7 @@
 //    type: byte or uint8_t
 //    from 0 to 255
 // 0 id is reserved for raspberry
-// 7 is reserved for demo in office
-// Use from 1 to 6
+// Use from 1 to 255
 #define ID 1
 
 // Rain sensor

@@ -12,9 +12,15 @@ DHT dht(DHTPIN, DHTTYPE);
 void setup() {
   Serial.begin(9600);
 
+  pinMode(rainPin, INPUT);
+  pinMode(LED_BUILTIN,OUTPUT);
+  dht.begin();
+
+  //Wire.begin();
+  RTC.begin();
 #ifdef CLEAREEPROM
   Serial.println("Iniciando borrado de ");
-  for (int i = 0 ; i < EEPROM.length() ; i++) {
+  for (int i = 0 ; i < EEPROM.length(); i++) {
     EEPROM.write(i, 0);
   }
   delay(100);
@@ -22,26 +28,29 @@ void setup() {
   Serial.println("Reprogramar sin la constante CLEAREEPROM");
   for(;;);
 #else
-  Serial.println("Iniciando lectura de EEPROM");
   if(EEPROM.read(RtcSetDir) == 0){
-    // Here goes code for setting RTC
-    // date and time in compilation time
-    
-    Serial.println("Ingresé a configurar RTC");
+    RTC.adjust(DateTime(__DATE__, __TIME__));
     EEPROM.write(RtcSetDir, 1);
-  } else {
-    Serial.println("No ingresé a configurar RTC");
+    
+    /*for(int i = 0; i < 5; i++){
+      delay(1000);
+      DateTime now = RTC.now();
+    
+      Serial.print(now.year(), DEC);
+      Serial.print('/');
+      Serial.print(now.month(), DEC);
+      Serial.print('/');
+      Serial.print(now.day(), DEC);
+      Serial.print(' ');
+      Serial.print(now.hour(), DEC);
+      Serial.print(':');
+      Serial.print(now.minute(), DEC);
+      Serial.print(':');
+      Serial.print(now.second(), DEC);
+      Serial.println();
+    }*/
   }
-  Serial.println("Etapa de configuracion de RTC terminada");
-  delay(100);
 #endif
-  
-  pinMode(rainPin, INPUT);
-  pinMode(LED_BUILTIN,OUTPUT);
-  dht.begin();
-
-  //Wire.begin();
-  RTC.begin();
   
   //clear any pending alarms
   RTC.armAlarm(1, false);
