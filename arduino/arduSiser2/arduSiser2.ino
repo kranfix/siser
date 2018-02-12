@@ -4,6 +4,7 @@
 #include "sleep.h"
 #include <RTClibExtended.h>
 #include <EEPROM.h>
+#include <math.h>
 
 RTC_DS3231 RTC;
 
@@ -95,7 +96,7 @@ void loop() {
 void readSensors() {
   // Rain level meassure
   int rainLevel = analogRead(rainPin);
-  siser.rain = map(rainLevel, 460, 1023, 0, 100);
+  siser.rain = map(rainLevel, 1023, 250, 0, 100);
 
   // Lectura del DHT22: Temperatura y Humedad
   siser.dht.t = dht.readTemperature();
