@@ -20,7 +20,8 @@ int dataframeToString(siser_t *s, char *buf){
   String temp = String(s->dht.t);
   String humi = String(s->dht.h);
   return sprintf(buf,
-    "{\"id\": %d,"
+    "{\"type\":\""   TYPE   "\","
+    "\"id\": %d,"
     "\"rain\": %d,"
     "\"dht\": {\"t\":%s, \"h\":%s},"
     "\"bat\": %s}"

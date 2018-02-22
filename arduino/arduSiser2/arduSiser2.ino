@@ -4,7 +4,6 @@
 #include "sleep.h"
 #include <RTClibExtended.h>
 #include <EEPROM.h>
-#include <math.h>
 
 RTC_DS3231 RTC;
 
@@ -67,7 +66,7 @@ void setup() {
   RTC.writeSqwPinMode(DS3231_OFF);
 
   //Set alarm1 every day at 18:33
-  RTC.setAlarm(0xC, 30, 20, 18, 0);   //set your wake-up time here
+  RTC.setAlarm(wakeUpFreq, 30, 20, 18, 0);   //set your wake-up time here
   RTC.alarmInterrupt(1, true);
   
   setupWakeUp();
@@ -90,6 +89,13 @@ void loop() {
   RTC.armAlarm(1, false);
   RTC.clearAlarm(1);
   RTC.alarmInterrupt(1, true);
+
+  /*while(Serial.available()){
+    char c = Serial.read();
+    c++;
+    Serial.write(c);
+    delay(3);
+  }*/
 }
 
 #ifndef DEBUG
@@ -103,6 +109,7 @@ void readSensors() {
   siser.dht.h = dht.readHumidity();
 
   // Battery level (Volt)
-  siser.bat = analogRead(batPin) * 5.0 / 1024;
+  siser.bat = analogRead(batPin) * V5 / 1024;
 }
 #endif
+

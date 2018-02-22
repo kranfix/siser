@@ -12,6 +12,7 @@
 // 0 id is reserved for raspberry
 // Use from 1 to 255
 #define ID 1
+#define TYPE "siser2"
 
 // Rain sensor
 #define rainPin A2
@@ -33,3 +34,10 @@
 
 // EEPROM
 #define RtcSetDir 0
+
+
+// Arduino 5V pin real voltage
+#define V5 4.6
+
+// Frecuencia de wake-up
+#define wakeUpFreq 0xC
