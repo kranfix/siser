@@ -1,10 +1,10 @@
 /* Sensors pinout configurations */
 
 // Debug
-#define DEBUG
+//#define DEBUG
 
 // Setting EEPROM memory
-#define CLEAREEPROM
+//#define CLEAREEPROM
 
 // Device id:
 //    type: byte or uint8_t
@@ -21,10 +21,14 @@
 #define xbeePowerPin 8
 
 // Rain sensor
-#define rainPin A0
+#define rainPin A2
+#define rain0   250
+#define rain100 1023
 
 // UV sensor
-#define uvPin A2
+#define uvPin A6
+#define uvMin 200
+#define uvMax 593
 
 // DHT sensor
 #define DHTPIN 4

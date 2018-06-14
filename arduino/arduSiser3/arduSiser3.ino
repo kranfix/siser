@@ -83,20 +83,20 @@ void readSimpleSensors() {
 #ifndef DEBUG
   // Rain level meassure
   int rainLevel = averageAnalogRead(rainPin,8);
-  siser.rain = mapfloat(rainLevel, 1023, 250, 0, 100);
+  siser.rain = mapfloat(rainLevel, rain0, rain100, 0, 100);
 
-  int uvLevel = averageAnalogRead(rainPin,8);
-  siser.uv = mapfloat(uvLevel, 200, 568, 0.0, 15.0);
+  int uvLevel = averageAnalogRead(uvPin,8);
+  siser.uv = mapfloat(uvLevel, uvMix, uvMax, 0, 15);
 
   // Lectura del DHT22: Temperatura y Humedad
   siser.dht.t = dht.readTemperature();
   siser.dht.h = dht.readHumidity();
 
   // Battery level (Volt)
-  siser.bat = averageAnalogRead(batPin,8) * V5 / 1024;
+  siser.bat = averageAnalogRead(batPin,8) * V5 / 1023.0;
 #endif
   dt.addInt("rain",siser.rain);
-  dt.addFloat("uv",siser.uv);
+  dt.addInt("uv",siser.uv);
   dt.Dht(siser.dht.t,siser.dht.h);
   dt.addFloat("bat",siser.bat);
 }
