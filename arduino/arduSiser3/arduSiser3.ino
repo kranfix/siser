@@ -86,7 +86,7 @@ void readSimpleSensors() {
   siser.rain = mapfloat(rainLevel, rain0, rain100, 0, 100);
 
   int uvLevel = averageAnalogRead(uvPin,8);
-  siser.uv = mapfloat(uvLevel, uvMix, uvMax, 0, 15);
+  siser.uv = mapfloat(uvLevel, uvMin, uvMax, 0, 15);
 
   // Lectura del DHT22: Temperatura y Humedad
   siser.dht.t = dht.readTemperature();
