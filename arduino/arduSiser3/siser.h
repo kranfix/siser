@@ -17,7 +17,7 @@ struct siser_t {
   uint8_t uv;
   myDht_t dht;
   float bat;     // battery: 0-5V
-  myAcc_t acc;   // accelerometer
+  myAcc_t acc;   // accelerometer  
 };
 
 siser_t siser = { // siser Example

@@ -1,3 +1,7 @@
+#include <Wire.h>
+#include <FaBo9Axis_MPU9250.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
 #include "config.h"
 #include <DHT.h>
 #include "sleep.h"
@@ -8,14 +12,18 @@
 #include <didiusJsonIdl.h>
 
 RTC_DS3231 RTC;
+FaBo9Axis fabo_9axis;
+Adafruit_BMP280 bme;
 
 DHT dht(DHTPIN, DHTTYPE);
 
-char buf[150];
+char buf[120];
 DataFrame dt(buf,TYPE,ID);
 
 void setup() {
   Serial.begin(9600);
+
+  pinMode(A7,INPUT);
 
   pinMode(rainPin, INPUT);
   pinMode(sensorPowerPin,OUTPUT);
@@ -70,8 +78,24 @@ void loop() {
   Serial.write(buf,dt.len());
   delay(500);
   digitalWrite(sensorPowerPin,LOW);
+
+  /* GY91 section */
+  /*dt.reset();
+  if(readAcc()){
+    dt.close();
+    Serial.write(buf,dt.len());
+    delay(500);
+  }
+
+  dt.reset();
+  if(readBmp()){
+    dt.close();
+    Serial.write(buf,dt.len());
+    delay(500);
+  }*/
+  
+  /* Starting sleep mode */
   digitalWrite(xbeePowerPin,LOW);
-  delay(500);
   sleepNow();
 
   RTC.armAlarm(1, false);
@@ -99,4 +123,31 @@ void readSimpleSensors() {
   dt.addInt("uv",siser.uv);
   dt.Dht(siser.dht.t,siser.dht.h);
   dt.addFloat("bat",siser.bat);
+}
+
+bool readAcc() {
+  if(fabo_9axis.begin()){
+    fabo_9axis.readAccelXYZ(&siser.acc.x,&siser.acc.y,&siser.acc.z);
+    dt.Acc(siser.acc.x,siser.acc.y,siser.acc.z);
+    return true;
+  }
+  return false;
+}
+
+bool readBmp() {
+  bool readed = false;
+  if(bme.begin(0x76)){
+    float pres = bme.readPressure();
+    if(!isnan(pres)){
+      dt.addFloat("pres",pres);
+      readed = true;
+    }
+
+    float alt = bme.readAltitude();
+    if(!isnan(alt)){
+      dt.addFloat("alt",alt);
+      readed = true;
+    } 
+  }
+  return readed;
 }
