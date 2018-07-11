@@ -13,7 +13,7 @@
 //    from 01 to 99
 // id=00 is reserved for raspberry
 // Use from 1 to 255
-#define ID "02"
+#define ID "05"
 #define TYPE "siser4"
 
 /* Communication */

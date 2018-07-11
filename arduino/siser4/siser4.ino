@@ -48,6 +48,9 @@ void setup() {
   RTC.setAlarm(wakeUpFreq, ss1, mm1, hh1, 0);   //set your wake-up time here
   RTC.alarmInterrupt(1, true);
 
+  pinMode(commPowerPin,OUTPUT);
+  digitalWrite(commPowerPin,HIGH);
+
 #else
   start = millis();
 #endif
