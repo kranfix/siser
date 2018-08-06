@@ -4,7 +4,8 @@
 //#define DEBUG
 
 // Complex sensors
-#define GY91
+//#define RTC_dev
+//#define GY91
 #define CURRENT
 #define complexPowerPin 7
 
@@ -25,13 +26,13 @@
 
 // Rain sensor
 #define rainPin A1
-#define rain0   80
-#define rain100 750
+#define rain0   1023
+#define rain100 200
 
 // UV sensor
 #define uvPin A0
 #define uv0  200
-#define uv15 568
+#define uv15 600
 
 // DHT sensor
 #define DHTPIN 4
@@ -80,6 +81,7 @@
 #define ss1 00
 
 #define DELAY 3600000 // 3600 s
+//#define DELAY 60000 // 100 s
 
 /* EEPROM */
 #define RtcSetDir 0
